@@ -1,68 +1,145 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@import "tailwindcss";
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@theme {
+  /* Fonts */
+  --font-sans: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --font-outfit: 'Outfit', 'Inter', sans-serif;
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+  /* Primary Colors - v4 automatically creates text-primary, bg-primary, etc. */
+  --color-primary-dark: #6d7eae;
+  --color-primary: #0b2878;
+  --color-primary-light: #9da9c9;
+  --color-primary-lighter: #ebf3ff;
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+  /* Accent Colors */
+  --color-accent: #febb02;
+  --color-accent-dark: #cd8900;
+  --color-accent-light: #ffe08a;
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+  /* Semantic Colors */
+  --color-success: #34a853;
+  --color-error: #ea4335;
+  --color-warning: #f9ab00;
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  /* Gray Scale */
+  --color-gray-900: #1a1a1a;
+  --color-gray-800: #333333;
+  --color-gray-700: #4a4a4a;
+  --color-gray-600: #6b6b6b;
+  --color-gray-50: #fafafa;
+
+  /* Custom Radii */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  /* Custom Shadows */
+  --shadow-glow: 0 0 20px rgba(11, 40, 120, 0.3);
+
+  /* Gradients - In v4, we can define these as utilities or use them via var() */
+  --background-image-gradient-primary: linear-gradient(135deg, #0b2878 0%, #6d7eae 100%);
+  --background-image-gradient-accent: linear-gradient(135deg, #febb02 0%, #ff8000 100%);
+  --background-image-gradient-hero: linear-gradient(135deg, #0b2878 0%, #0b2878 50%, #6d7eae 100%);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* --- Base Styles --- */
+@layer base {
+  * {
+    @apply border-gray-300;
   }
-  a:hover {
-    color: #747bff;
+
+  body {
+    @apply m-0 antialiased bg-gray-50 text-gray-800 font-sans;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  button {
-    background-color: #f9f9f9;
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-outfit font-bold;
   }
+
+  h1 { @apply text-4xl md:text-5xl lg:text-6xl; }
+  h2 { @apply text-3xl md:text-4xl lg:text-5xl; }
+  h3 { @apply text-2xl md:text-3xl lg:text-4xl; }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  ::selection {
+    @apply bg-primary-light text-white;
+  }
+}
+
+/* --- Components & Utilities --- */
+/* In v4, use @utility for custom classes so Tailwind recognizes them as utilities */
+
+@utility glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@utility btn {
+  @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 inline-flex items-center justify-center gap-2;
+}
+
+@utility btn-primary {
+  @apply btn text-white bg-gradient-primary shadow-md hover:-translate-y-0.5 hover:shadow-lg hover:shadow-glow;
+}
+
+@utility btn-accent {
+  @apply btn text-gray-900 bg-gradient-accent shadow-md hover:-translate-y-0.5 hover:shadow-lg;
+}
+
+@utility btn-outline {
+  @apply btn border-2 border-primary text-primary bg-white hover:bg-primary hover:text-white hover:-translate-y-0.5;
+}
+
+@utility card {
+  @apply bg-white rounded-xl p-6 transition-all duration-300 shadow-md hover:-translate-y-1 hover:shadow-xl;
+}
+
+@utility input {
+  @apply w-full px-4 py-3 rounded-lg border border-gray-300 outline-none transition-all duration-300 focus:border-primary focus:ring-2 focus:ring-primary/20;
+}
+
+@utility container-custom {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+@utility section {
+  @apply py-12 md:py-16 lg:py-24;
+}
+
+@utility text-gradient-primary {
+  background: var(--background-image-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Animations --- */
+@utility animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Additional native CSS for the Select arrow as before */
+select {
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b6b6b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
 }

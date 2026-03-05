@@ -1,0 +1,2797 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      operationId: AppController_getHello
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - App
+  /auth/signup:
+    post:
+      operationId: AuthController_signup
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupDto'
+      responses:
+        '201':
+          description: User successfully registered
+        '400':
+          description: Invalid input data
+      summary: Register a new client user
+      tags: &ref_0
+        - Authentication
+  /auth/owner/signup:
+    post:
+      operationId: AuthController_ownerSignup
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OwnerSignupDto'
+      responses:
+        '201':
+          description: Owner account created successfully
+        '400':
+          description: Invalid input data
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Upgrade client account to owner account
+      tags: *ref_0
+  /auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: Login successful
+        '201':
+          description: ''
+        '401':
+          description: Invalid credentials
+      summary: Login with email and password
+      tags: *ref_0
+  /auth/switch/owner:
+    patch:
+      operationId: AuthController_switchToOwner
+      parameters: []
+      responses:
+        '200':
+          description: Successfully switched to owner role
+        '401':
+          description: Unauthorized
+        '404':
+          description: Owner account not found
+      security:
+        - JWT-auth: []
+      summary: Switch user role to owner
+      tags: *ref_0
+  /user/me:
+    patch:
+      operationId: UserController_update
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: User profile updated successfully
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Update current user profile
+      tags: &ref_1
+        - Users
+    get:
+      operationId: UserController_getProfile
+      parameters: []
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileDto'
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Get current user profile
+      tags: *ref_1
+  /user/owner/me:
+    patch:
+      operationId: UserController_updateOwner
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOwnerDto'
+      responses:
+        '200':
+          description: Owner profile updated successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Owner role required
+      security:
+        - JWT-auth: []
+      summary: Update owner profile
+      tags: *ref_1
+  /venue/types:
+    post:
+      operationId: VenueController_createVenueType
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVenueTypeDto'
+      responses:
+        '201':
+          description: Venue type created successfully
+        '403':
+          description: Forbidden - Admin role required
+      security:
+        - JWT-auth: []
+      summary: Create a new venue type (Admin only)
+      tags: &ref_2
+        - Venues
+    get:
+      operationId: VenueController_getVenueTypes
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_2
+  /venue/types/{id}:
+    patch:
+      operationId: VenueController_updateVenueType
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVenueTypeDto'
+      responses:
+        '200':
+          description: Venue type updated successfully
+        '403':
+          description: Forbidden - Admin role required
+        '404':
+          description: Venue type not found
+      security:
+        - JWT-auth: []
+      summary: Update venue type (Admin only)
+      tags: *ref_2
+    delete:
+      operationId: VenueController_deleteVenueType
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Venue type deleted successfully
+        '403':
+          description: Forbidden - Admin role required
+        '404':
+          description: Venue type not found
+      security:
+        - JWT-auth: []
+      summary: Delete venue type (Admin only)
+      tags: *ref_2
+  /venue:
+    post:
+      operationId: VenueController_createVenue
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVenueDto'
+      responses:
+        '201':
+          description: Venue created successfully
+        '403':
+          description: Forbidden - Owner role required
+      security:
+        - JWT-auth: []
+      summary: Create a new venue
+      tags: *ref_2
+  /venue/{locationId}/{name}/preview:
+    get:
+      operationId: VenueController_previewVenue
+      parameters:
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: name
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Venue preview retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VenuePreviewResponseDto'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Venue not found
+      security:
+        - JWT-auth: []
+      summary: Preview venue details
+      tags: *ref_2
+  /venue/{locationId}:
+    get:
+      operationId: VenueController_updateVenue
+      parameters:
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: name
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVenueDto'
+      responses:
+        '200':
+          description: Venue updated successfully
+        '403':
+          description: Forbidden - Owner role required
+        '404':
+          description: Venue not found
+      security:
+        - JWT-auth: []
+      summary: Update venue details
+      tags: *ref_2
+  /venue/{locationId}/{name}:
+    delete:
+      operationId: VenueController_deleteVenue
+      parameters:
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: name
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Venue deleted successfully
+        '403':
+          description: Forbidden - Owner role required
+        '404':
+          description: Venue not found
+      security:
+        - JWT-auth: []
+      summary: Delete a venue
+      tags: *ref_2
+  /venue/images:
+    post:
+      operationId: VenueController_createVenueImage
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVenueImageDto'
+      responses:
+        '201':
+          description: Image added successfully
+        '403':
+          description: Forbidden - Owner role required
+      security:
+        - JWT-auth: []
+      summary: Add an image to a venue
+      tags: *ref_2
+  /venue/images/{locationId}/{venueName}/{url}:
+    delete:
+      operationId: VenueController_deleteVenueImage
+      parameters:
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: venueName
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: url
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Image deleted successfully
+        '403':
+          description: Forbidden - Owner role required
+        '404':
+          description: Image not found
+      security:
+        - JWT-auth: []
+      summary: Remove an image from a venue
+      tags: *ref_2
+  /venue/rates/{locationId}:
+    get:
+      operationId: VenueController_getLocationRatings
+      parameters:
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ratings retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationRatingsDto'
+        '404':
+          description: Location not found
+      summary: Get all ratings for a location
+      tags: *ref_2
+  /venue/rates:
+    post:
+      operationId: VenueController_createRate
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRateDto'
+      responses:
+        '201':
+          description: Rating created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateResponseDto'
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Rate a location
+      tags: *ref_2
+  /venue/rates/{clientId}/{locationId}:
+    patch:
+      operationId: VenueController_updateRate
+      parameters:
+        - name: clientId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRateDto'
+      responses:
+        '200':
+          description: Rating updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateResponseDto'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Rating not found
+      security:
+        - JWT-auth: []
+      summary: Update an existing rating
+      tags: *ref_2
+    delete:
+      operationId: VenueController_deleteRate
+      parameters:
+        - name: clientId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Rating deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Rating not found
+      security:
+        - JWT-auth: []
+      summary: Delete a rating
+      tags: *ref_2
+  /venue/client/rates:
+    get:
+      operationId: VenueController_getClientRates
+      parameters: []
+      responses:
+        '200':
+          description: User ratings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RateResponseDto'
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Get all ratings by current user
+      tags: *ref_2
+  /venue/client/favors:
+    get:
+      operationId: VenueController_getClientFavors
+      parameters: []
+      responses:
+        '200':
+          description: User favorites retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FavorResponseDto'
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Get all favorited locations by current user
+      tags: *ref_2
+  /location:
+    get:
+      operationId: LocationController_getAllLocations
+      parameters: []
+      responses:
+        '200':
+          description: Locations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationListItemDto'
+      summary: Get all active locations (public)
+      tags: &ref_3
+        - Locations
+    post:
+      operationId: LocationController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLocationDto'
+      responses:
+        '201':
+          description: Location created successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Owner role required
+      security:
+        - JWT-auth: []
+      summary: Create a new location
+      tags: *ref_3
+  /location/owner:
+    get:
+      operationId: LocationController_getLocationsOfOwner
+      parameters: []
+      responses:
+        '200':
+          description: Locations retrieved successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Owner role required
+      security:
+        - JWT-auth: []
+      summary: Get all locations owned by current user
+      tags: *ref_3
+  /location/search:
+    post:
+      operationId: LocationController_searchLocations
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchLocationsDto'
+      responses:
+        '200':
+          description: Search results returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationSearchResultDto'
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Search for available locations with filters
+      tags: *ref_3
+  /location/{id}:
+    get:
+      operationId: LocationController_getLocationDetails
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Location details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationDetailsResponseDto'
+        '404':
+          description: Location not found
+      summary: Get complete location details by ID (public)
+      tags: *ref_3
+    patch:
+      operationId: LocationController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLocationDto'
+      responses:
+        '200':
+          description: Location updated successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Owner role required
+        '404':
+          description: Location not found
+      security:
+        - JWT-auth: []
+      summary: Update location details
+      tags: *ref_3
+    delete:
+      operationId: LocationController_delete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Location deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Owner role required
+        '404':
+          description: Location not found
+      security:
+        - JWT-auth: []
+      summary: Delete a location
+      tags: *ref_3
+  /location/{id}/details:
+    get:
+      operationId: LocationController_previewLocation
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+      tags: *ref_3
+  /location/{id}/venues:
+    get:
+      operationId: LocationController_getVenuesAtLocation
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+      tags: *ref_3
+  /location/{locationId}/favors:
+    post:
+      operationId: LocationController_createFavor
+      parameters:
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Favorite added successfully
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Add location to favorites
+      tags: *ref_3
+    delete:
+      operationId: LocationController_deleteFavor
+      parameters:
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Favorite removed successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Favorite not found
+      security:
+        - JWT-auth: []
+      summary: Remove location from favorites
+      tags: *ref_3
+  /location/admin/owner-fees:
+    post:
+      operationId: LocationController_getOwnerFees
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminOwnerFeesQueryDto'
+      responses:
+        '200':
+          description: Owner fees retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminOwnerFeesResponseDto'
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminOwnerFeesResponseDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Admin role required
+      security:
+        - JWT-auth: []
+      summary: Get owner fees statistics by month/year (Admin only)
+      tags: *ref_3
+  /amenity:
+    post:
+      operationId: AmenityController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAmenityDto'
+      responses:
+        '201':
+          description: Amenity created successfully
+        '403':
+          description: Forbidden - Owner role required
+      security: &ref_4
+        - JWT-auth: []
+      summary: Create a new amenity
+      tags: &ref_5
+        - Amenities
+  /amenity/{locationId}:
+    get:
+      operationId: AmenityController_getByLocation
+      parameters:
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Amenities retrieved successfully
+        '403':
+          description: Forbidden - Owner role required
+      security: *ref_4
+      summary: Get amenities by location ID
+      tags: *ref_5
+  /amenity/{locationId}/{name}:
+    get:
+      operationId: AmenityController_getByLocationAndName
+      parameters:
+        - name: locationId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: name
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Amenity retrieved successfully
+        '403':
+          description: Forbidden - Owner role required
+      security: *ref_4
+      summary: Get amenity by location ID and name
+      tags: *ref_5
+  /amenity/{id}/{name}:
+    patch:
+      operationId: AmenityController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: name
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAmenityDto'
+      responses:
+        '200':
+          description: Amenity updated successfully
+        '403':
+          description: Forbidden - Owner role required
+        '404':
+          description: Amenity not found
+      security: *ref_4
+      summary: Update amenity details
+      tags: *ref_5
+    delete:
+      operationId: AmenityController_delete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: name
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Amenity deleted successfully
+        '403':
+          description: Forbidden - Owner role required
+        '404':
+          description: Amenity not found
+      security: *ref_4
+      summary: Delete an amenity
+      tags: *ref_5
+  /order:
+    post:
+      operationId: OrderController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderDto'
+      responses:
+        '201':
+          description: Order created successfully
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Create a new booking order
+      tags: &ref_6
+        - Orders
+  /order/uncompleted:
+    get:
+      operationId: OrderController_getUncompletedOrders
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+      tags: *ref_6
+  /order/cancelled:
+    patch:
+      operationId: OrderController_cancelInvoice
+      parameters: []
+      responses:
+        '200':
+          description: Invoice cancelled successfully
+        '404':
+          description: Invoice not found
+      summary: Mark invoice as cancelled
+      tags: *ref_6
+  /order/metadata:
+    get:
+      operationId: OrderController_getDiscountsByVenue
+      parameters:
+        - name: locationId
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: venueName
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: startTime
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: endTime
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Metadata retrieved successfully
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Get available amenities and discounts for booking
+      tags: *ref_6
+  /order/{id}:
+    patch:
+      operationId: OrderController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderDto'
+      responses:
+        '200':
+          description: Order updated successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Order not found
+      security:
+        - JWT-auth: []
+      summary: Update order details
+      tags: *ref_6
+    delete:
+      operationId: OrderController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Order not found
+      security:
+        - JWT-auth: []
+      summary: Cancel/delete an order
+      tags: *ref_6
+  /order/amenities:
+    post:
+      operationId: OrderController_addAmenity
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddOrderAmenityDto'
+      responses:
+        '201':
+          description: Amenity added to order successfully
+        '403':
+          description: Forbidden - Owner role required
+      security:
+        - JWT-auth: []
+      summary: Add an amenity to an order
+      tags: *ref_6
+    delete:
+      operationId: OrderController_removeAmenity
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveOrderAmenityDto'
+      responses:
+        '200':
+          description: Amenity removed from order successfully
+        '403':
+          description: Forbidden - Owner role required
+      security:
+        - JWT-auth: []
+      summary: Remove an amenity from an order
+      tags: *ref_6
+  /order/owner:
+    get:
+      operationId: OrderController_getOrdersByLocation
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+      tags: *ref_6
+  /order/client:
+    get:
+      operationId: OrderController_getClientOrders
+      parameters:
+        - name: status
+          required: false
+          in: query
+          description: Filter by order status (optional)
+          schema:
+            example: CONFIRMED
+            type: string
+            enum:
+              - PENDING
+              - CONFIRMED
+              - CANCELLED
+              - COMPLETED
+      responses:
+        '200':
+          description: Orders retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClientOrderResponseDto'
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Get orders for current client with optional status filter
+      tags: *ref_6
+  /order/{orderId}/invoice-data:
+    get:
+      operationId: OrderController_getInvoiceCreateData
+      parameters:
+        - name: orderId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Invoice data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceCreateDataResponseDto'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Order not found
+      security:
+        - JWT-auth: []
+      summary: Get invoice creation data for an order
+      tags: *ref_6
+  /payment/invoices:
+    post:
+      operationId: PaymentController_createInvoice
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInvoiceDto'
+      responses:
+        '201':
+          description: Invoice created successfully
+        '400':
+          description: Invalid input data
+      summary: Create an invoice for an order
+      tags: &ref_7
+        - Payments
+  /payment/invoices/complete:
+    patch:
+      operationId: PaymentController_completeInvoicePayment
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteInvoicePaymentDto'
+      responses:
+        '200':
+          description: Invoice payment completed successfully
+        '404':
+          description: Invoice not found
+      summary: Mark invoice as paid with transaction details
+      tags: *ref_7
+  /payment/webhook:
+    patch:
+      operationId: PaymentController_webhookUpdateOrderStatus
+      parameters: []
+      responses:
+        '200':
+          description: Order status updated successfully
+      summary: Webhook to update order status
+      tags: *ref_7
+  /payment/invoices/status:
+    patch:
+      operationId: PaymentController_updateInvoiceStatus
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateInvoiceStatusDto'
+      responses:
+        '200':
+          description: Invoice status updated successfully
+        '404':
+          description: Invoice not found
+      summary: Update invoice payment status
+      tags: *ref_7
+  /payment/discounts:
+    post:
+      operationId: PaymentController_createDiscount
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDiscountDto'
+      responses:
+        '201':
+          description: Discount created successfully
+        '403':
+          description: Forbidden - Admin role required
+      security:
+        - JWT-auth: []
+      summary: Create a new discount code (Admin only)
+      tags: *ref_7
+  /payment/discounts/{id}:
+    patch:
+      operationId: PaymentController_updateDiscount
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDiscountDto'
+      responses:
+        '200':
+          description: Discount updated successfully
+        '403':
+          description: Forbidden - Admin role required
+        '404':
+          description: Discount not found
+      security:
+        - JWT-auth: []
+      summary: Update discount details (Admin only)
+      tags: *ref_7
+    delete:
+      operationId: PaymentController_deleteDiscount
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Discount deleted successfully
+        '403':
+          description: Forbidden - Admin role required
+        '404':
+          description: Discount not found
+      security:
+        - JWT-auth: []
+      summary: Delete a discount (Admin only)
+      tags: *ref_7
+  /payment/applies:
+    post:
+      operationId: PaymentController_applyDiscount
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplyDto'
+      responses:
+        '201':
+          description: Discount applied successfully
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Apply a discount code to an order
+      tags: *ref_7
+    patch:
+      operationId: PaymentController_updateApply
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateApplyDto'
+      responses:
+        '200':
+          description: Discount updated successfully
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Change the discount applied to an order
+      tags: *ref_7
+    delete:
+      operationId: PaymentController_removeDiscount
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteApplyDto'
+      responses:
+        '200':
+          description: Discount removed successfully
+        '401':
+          description: Unauthorized
+      security:
+        - JWT-auth: []
+      summary: Remove a discount from an order
+      tags: *ref_7
+  /storage:
+    post:
+      operationId: MinioStorageController_getPresignedUrl
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - MinioStorage
+info:
+  title: Venue Booking System API
+  description: >-
+    API documentation for the Venue Booking System - manage locations, venues,
+    bookings, and payments
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    JWT-auth:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+      name: JWT
+      description: Enter JWT token
+      in: header
+  schemas:
+    SignupDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+          description: User email address
+        password:
+          type: string
+          example: SecurePass123
+          description: User password
+        lastName:
+          type: string
+          example: Nguyen
+          description: User last name
+        firstName:
+          type: string
+          example: Van A
+          description: User first name
+        DoB:
+          type: string
+          example: '1990-01-15'
+          description: Date of birth (YYYY-MM-DD)
+      required:
+        - email
+        - password
+        - lastName
+        - firstName
+        - DoB
+    OwnerSignupDto:
+      type: object
+      properties:
+        bankId:
+          type: string
+          example: VCB
+          description: Bank ID code
+        bankName:
+          type: string
+          example: Vietcombank
+          description: Bank name
+        accountName:
+          type: string
+          example: NGUYEN VAN A
+          description: Account holder name
+        accountNumber:
+          type: string
+          example: '1234567890'
+          description: Bank account number
+      required:
+        - bankId
+        - bankName
+        - accountName
+        - accountNumber
+    LoginDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+          description: User email address
+        password:
+          type: string
+          example: SecurePass123
+          description: User password
+      required:
+        - email
+        - password
+    UpdateUserDto:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Van A
+          description: User first name
+        lastName:
+          type: string
+          example: Nguyen
+          description: User last name
+        phoneNumber:
+          type: string
+          example: '+84987654321'
+          description: Phone number
+        avatar:
+          type: string
+          example: https://example.com/avatar.jpg
+          description: Avatar URL
+        dob:
+          type: string
+          example: '1990-01-15'
+          description: Date of birth (YYYY-MM-DD)
+    UserProfileDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a1b2c3d4-e5f6-7890-1234-567890abcdef
+          description: User ID
+        email:
+          type: string
+          example: user@example.com
+          description: User email
+        firstName:
+          type: string
+          example: Van A
+          description: First name
+        lastName:
+          type: string
+          example: Nguyen
+          description: Last name
+        phoneNo:
+          type: string
+          nullable: true
+          example: '+84987654321'
+          description: Phone number
+        avatarURL:
+          type: string
+          nullable: true
+          example: https://example.com/avatar.jpg
+          description: Avatar URL
+        DoB:
+          format: date-time
+          type: string
+          example: '1990-01-15'
+          description: Date of birth
+        isActive:
+          type: number
+          example: 1
+          description: Is active status
+        isAdmin:
+          type: number
+          example: 0
+          description: Is admin status
+        createdAt:
+          format: date-time
+          type: string
+          example: '2023-01-01T00:00:00.000Z'
+          description: Created at
+        updatedAt:
+          format: date-time
+          type: string
+          example: '2023-01-01T00:00:00.000Z'
+          description: Updated at
+      required:
+        - id
+        - email
+        - firstName
+        - lastName
+        - DoB
+        - isActive
+        - isAdmin
+        - createdAt
+        - updatedAt
+    UpdateOwnerDto:
+      type: object
+      properties:
+        bankId:
+          type: string
+          example: VCB
+          description: Bank ID code
+        bankName:
+          type: string
+          example: Vietcombank
+          description: Bank name
+        accountName:
+          type: string
+          example: NGUYEN VAN A
+          description: Account holder name
+        accountNo:
+          type: string
+          example: '1234567890'
+          description: Bank account number
+      required:
+        - bankId
+        - bankName
+        - accountName
+        - accountNo
+    CreateVenueTypeDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        minCapacity:
+          type: number
+          minimum: 1
+        maxCapacity:
+          type: number
+          minimum: 1
+      required:
+        - name
+        - minCapacity
+        - maxCapacity
+    UpdateVenueTypeDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        minCapacity:
+          type: number
+          minimum: 1
+        maxCapacity:
+          type: number
+          minimum: 1
+    CreateVenueDto:
+      type: object
+      properties:
+        locationId:
+          type: string
+        name:
+          type: string
+        venueTypeId:
+          type: string
+        floor:
+          type: string
+        area:
+          type: number
+          minimum: 0.1
+        pricePerHour:
+          type: number
+          minimum: 0.01
+        images:
+          type: array
+          items:
+            type: string
+      required:
+        - locationId
+        - name
+        - venueTypeId
+        - floor
+        - area
+        - pricePerHour
+        - images
+    VenuePreviewResponseDto:
+      type: object
+      properties:
+        venue_name:
+          type: string
+          example: Conference Room A
+          description: Venue name
+        floor:
+          type: string
+          example: '3'
+          description: Floor number
+        area:
+          type: number
+          example: 50.5
+          description: Area in square meters
+        pricePerHour:
+          type: number
+          example: 150000
+          description: Price per hour in VND
+        venueType_id:
+          type: string
+          example: aaaa1111-aaaa-aaaa-aaaa-aaaaaaaa0001
+          description: Venue type ID
+        theme_name:
+          type: string
+          example: Minimalist
+          description: Theme name
+        minCapacity:
+          type: number
+          example: 10
+          description: Minimum capacity
+        maxCapacity:
+          type: number
+          example: 50
+          description: Maximum capacity
+        location_id_uuid:
+          type: string
+          example: 30303030-3030-3030-3030-303030303002
+          description: Location UUID
+      required:
+        - venue_name
+        - floor
+        - area
+        - pricePerHour
+        - venueType_id
+        - theme_name
+        - minCapacity
+        - maxCapacity
+        - location_id_uuid
+    UpdateVenueDto:
+      type: object
+      properties:
+        name:
+          type: string
+        typeId:
+          type: string
+        floor:
+          type: string
+        area:
+          type: number
+          minimum: 0.1
+        pricePerHour:
+          type: number
+          minimum: 0.01
+        isActive:
+          type: boolean
+    CreateVenueImageDto:
+      type: object
+      properties:
+        locationId:
+          type: string
+        venueName:
+          type: string
+        url:
+          type: string
+          format: uri
+      required:
+        - locationId
+        - venueName
+        - url
+    RateResponseDto:
+      type: object
+      properties:
+        clientId:
+          type: string
+          example: client-uuid
+          description: Client user ID
+        locationId:
+          type: string
+          example: location-uuid
+          description: Location ID
+        stars:
+          type: number
+          example: 4
+          description: Rating stars (1-5)
+        comment:
+          type: string
+          example: Great venue!
+          description: Review comment
+        createdAt:
+          type: string
+          example: '2024-12-05T10:30:00Z'
+          description: Rating creation timestamp
+        updatedAt:
+          type: string
+          example: '2024-12-05T15:45:00Z'
+          description: Rating last update timestamp
+        clientName:
+          type: string
+          example: John Doe
+          description: Client full name
+        avatarURL:
+          type: string
+          example: https://example.com/avatar.jpg
+          description: Client avatar URL
+        locationName:
+          type: string
+          example: Sky Garden Event Space
+          description: Location name (when fetching client ratings)
+        city:
+          type: string
+          example: Ho Chi Minh City
+          description: City (when fetching client ratings)
+        thumbnailURL:
+          type: string
+          example: https://example.com/thumbnail.jpg
+          description: Thumbnail URL (when fetching client ratings)
+      required:
+        - clientId
+        - locationId
+        - stars
+        - createdAt
+        - clientName
+    LocationRatingsDto:
+      type: object
+      properties:
+        locationId:
+          type: string
+          example: location-uuid
+          description: Location ID
+        avgRating:
+          type: number
+          example: 4.5
+          description: Average rating
+        totalRatings:
+          type: number
+          example: 42
+          description: Total number of ratings
+        ratings:
+          description: List of all ratings
+          type: array
+          items:
+            $ref: '#/components/schemas/RateResponseDto'
+      required:
+        - locationId
+        - avgRating
+        - totalRatings
+        - ratings
+    CreateRateDto:
+      type: object
+      properties:
+        clientId:
+          type: string
+          example: client-uuid
+          description: Client user ID
+        locationId:
+          type: string
+          example: location-uuid
+          description: Location ID to rate
+        stars:
+          type: number
+          minimum: 1
+          maximum: 5
+          example: 4
+          description: Rating stars (1-5)
+        comment:
+          type: string
+          example: Great venue with excellent facilities!
+          description: Optional review comment
+      required:
+        - clientId
+        - locationId
+        - stars
+    UpdateRateDto:
+      type: object
+      properties:
+        stars:
+          type: number
+          minimum: 1
+          maximum: 5
+          example: 5
+          description: Updated rating stars (1-5)
+        comment:
+          type: string
+          example: 'Updated review: Amazing experience!'
+          description: Updated review comment
+    FavorResponseDto:
+      type: object
+      properties:
+        clientId:
+          type: string
+          example: client-uuid
+          description: Client user ID
+        locationId:
+          type: string
+          example: location-uuid
+          description: Location ID
+        locationName:
+          type: string
+          example: Sky Garden Event Space
+          description: Location name
+        city:
+          type: string
+          example: Ho Chi Minh City
+          description: City
+        avgRating:
+          type: number
+          example: 4.5
+          description: Average rating
+        thumbnailURL:
+          type: string
+          example: https://example.com/thumbnail.jpg
+          description: Thumbnail URL
+        createdAt:
+          type: string
+          example: '2024-12-05T10:30:00Z'
+          description: When favorited
+      required:
+        - clientId
+        - locationId
+        - locationName
+        - city
+        - avgRating
+        - thumbnailURL
+        - createdAt
+    LocationListItemDto:
+      type: object
+      properties:
+        location_id:
+          type: string
+          example: 30303030-3030-3030-3030-303030303002
+          description: Location UUID
+        location_name:
+          type: string
+          example: Sky Garden Event Space
+          description: Location name
+        description:
+          type: string
+          example: Modern event space with panoramic city views
+          description: Location description
+        addrNo:
+          type: string
+          example: '123'
+          description: Address number
+        ward:
+          type: string
+          example: Ben Nghe
+          description: Ward/District
+        city:
+          type: string
+          example: Ho Chi Minh City
+          description: City name
+        avgRating:
+          type: number
+          example: 4.5
+          description: Average rating
+        thumbnailURL:
+          type: string
+          example: https://example.com/thumbnail.jpg
+          description: Thumbnail image URL
+        mapURL:
+          type: string
+          example: https://maps.google.com/?q=10.7769,106.7009
+          description: Google Maps URL
+        phoneNo:
+          type: string
+          example: '+84281234567'
+          description: Contact phone number
+        owner_id:
+          type: string
+          example: owner-uuid
+          description: Owner user ID
+        isActive:
+          type: boolean
+          example: true
+          description: Is location active
+        createdAt:
+          type: string
+          example: '2024-12-05T10:30:00Z'
+          description: Created timestamp
+        updatedAt:
+          type: string
+          example: '2024-12-05T15:45:00Z'
+          description: Updated timestamp
+        is_favorited:
+          type: boolean
+          example: true
+          description: Is favorited by current user
+        total_venues:
+          type: number
+          example: 5
+          description: Total number of venues at this location
+        min_price:
+          type: number
+          example: 100000
+          description: Minimum price per hour across all venues
+        max_price:
+          type: number
+          example: 500000
+          description: Maximum price per hour across all venues
+        total_reviews:
+          type: number
+          example: 42
+          description: Total number of reviews
+      required:
+        - location_id
+        - location_name
+        - addrNo
+        - ward
+        - city
+        - avgRating
+        - thumbnailURL
+        - mapURL
+        - owner_id
+        - isActive
+        - createdAt
+        - updatedAt
+        - is_favorited
+        - total_venues
+        - min_price
+        - max_price
+        - total_reviews
+    CreateLocationDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Sky Garden Event Space
+          description: Location name
+        description:
+          type: string
+          example: Modern event space with panoramic city views
+          description: Location description
+        addrNo:
+          type: string
+          example: 123 Nguyen Hue
+          description: Street address number
+        ward:
+          type: string
+          example: Ben Nghe
+          description: Ward/District
+        city:
+          type: string
+          example: Ho Chi Minh City
+          description: City name
+        policy:
+          type: string
+          example: No smoking. Pets not allowed.
+          description: Location policies
+        phoneNo:
+          type: string
+          example: '+84281234567'
+          description: Contact phone number
+        mapURL:
+          type: string
+          format: uri
+          example: https://maps.google.com/?q=10.7769,106.7009
+          description: Google Maps URL
+        thumbnailURL:
+          type: string
+          format: uri
+          example: https://example.com/thumbnail.jpg
+          description: Thumbnail image URL
+      required:
+        - name
+        - addrNo
+        - ward
+        - city
+        - mapURL
+        - thumbnailURL
+    SearchLocationsDto:
+      type: object
+      properties:
+        city:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
+        minPrice:
+          type: number
+          minimum: 0
+        maxPrice:
+          type: number
+          minimum: 0
+        minAvgRating:
+          type: number
+          minimum: 0
+          maximum: 5
+        theme:
+          type: string
+        size:
+          type: string
+        amenityCategory:
+          type: string
+        sort:
+          type: string
+      required:
+        - city
+    LocationSearchResultDto:
+      type: object
+      properties:
+        location_id:
+          type: string
+          example: 30303030-3030-3030-3030-303030303002
+        location_name:
+          type: string
+          example: Heidi Meeting Suites
+        addrNo:
+          type: string
+          example: '7'
+        ward:
+          type: string
+          example: Ward 2
+        city:
+          type: string
+          example: Da Nang
+        avgRating:
+          type: string
+          example: '3.5'
+        thumbnailURL:
+          type: string
+          example: https://example.com/thumbs/heidi_suites.jpg
+        mapURL:
+          type: string
+          example: https://maps.example.com/?q=Heidi+Meeting+Suites
+        location_phone:
+          type: string
+          example: '0901234202'
+        venue_name:
+          type: string
+          example: Interview Room
+        floor:
+          type: string
+          example: '3'
+        area:
+          type: string
+          example: '15.0'
+        pricePerHour:
+          type: string
+          example: '150000.00'
+        venueType_id:
+          type: string
+          example: aaaa1111-aaaa-aaaa-aaaa-aaaaaaaa0001
+        theme_name:
+          type: string
+          example: Minimalist
+        minCapacity:
+          type: number
+          example: 1
+        maxCapacity:
+          type: number
+          example: 40
+        image_urls:
+          example:
+            - https://cloud.com/image1.jpg
+            - https://cloud.com/image2.jpg
+          description: Array of image URLs
+          type: array
+          items:
+            type: string
+        is_favor:
+          type: number
+          example: 0
+      required:
+        - location_id
+        - location_name
+        - addrNo
+        - ward
+        - city
+        - avgRating
+        - thumbnailURL
+        - mapURL
+        - location_phone
+        - venue_name
+        - floor
+        - area
+        - pricePerHour
+        - venueType_id
+        - theme_name
+        - minCapacity
+        - maxCapacity
+        - image_urls
+        - is_favor
+    LocationBasicInfoDto:
+      type: object
+      properties:
+        location_id:
+          type: string
+          example: 30303030-3030-3030-3030-303030303002
+          description: Location UUID
+        location_name:
+          type: string
+          example: Sky Garden Event Space
+          description: Location name
+        description:
+          type: string
+          example: Modern event space with panoramic city views
+          description: Location description
+        addrNo:
+          type: string
+          example: '123'
+          description: Address number
+        ward:
+          type: string
+          example: Ben Nghe
+          description: Ward/District
+        city:
+          type: string
+          example: Ho Chi Minh City
+          description: City name
+        avgRating:
+          type: number
+          example: 4.5
+          description: Average rating
+        policy:
+          type: string
+          example: No smoking. Pets not allowed.
+          description: Location policies
+        phoneNo:
+          type: string
+          example: '+84281234567'
+          description: Contact phone number
+        mapURL:
+          type: string
+          example: https://maps.google.com/?q=10.7769,106.7009
+          description: Google Maps URL
+        thumbnailURL:
+          type: string
+          example: https://example.com/thumbnail.jpg
+          description: Thumbnail image URL
+        isActive:
+          type: boolean
+          example: true
+          description: Is location active
+        owner_id:
+          type: string
+          example: owner-uuid
+          description: Owner user ID
+        is_favorited:
+          type: boolean
+          example: true
+          description: Is favorited by current user
+      required:
+        - location_id
+        - location_name
+        - addrNo
+        - ward
+        - city
+        - avgRating
+        - mapURL
+        - thumbnailURL
+        - isActive
+        - owner_id
+        - is_favorited
+    VenueDetailDto:
+      type: object
+      properties:
+        venue_name:
+          type: string
+          example: Conference Room A
+          description: Venue name
+        floor:
+          type: string
+          example: '3'
+          description: Floor number
+        area:
+          type: number
+          example: 50.5
+          description: Area in square meters
+        pricePerHour:
+          type: number
+          example: 150000
+          description: Price per hour in VND
+        isActive:
+          type: boolean
+          example: true
+          description: Is venue active
+        venueType_id:
+          type: string
+          example: venue-type-uuid
+          description: Venue type ID
+        theme_name:
+          type: string
+          example: Minimalist
+          description: Theme name
+        theme_description:
+          type: string
+          example: Modern minimalist design
+          description: Theme description
+        minCapacity:
+          type: number
+          example: 10
+          description: Minimum capacity
+        maxCapacity:
+          type: number
+          example: 50
+          description: Maximum capacity
+      required:
+        - venue_name
+        - floor
+        - area
+        - pricePerHour
+        - isActive
+        - venueType_id
+        - theme_name
+        - minCapacity
+        - maxCapacity
+    VenueImageDto:
+      type: object
+      properties:
+        venueName:
+          type: string
+          example: Conference Room A
+          description: Venue name
+        locationImgURL:
+          type: string
+          example: https://example.com/images/room-a.jpg
+          description: Image URL
+      required:
+        - venueName
+        - locationImgURL
+    AmenityDetailDto:
+      type: object
+      properties:
+        amenity_name:
+          type: string
+          example: Projector 4K
+          description: Amenity name
+        location_id:
+          type: string
+          example: location-uuid
+          description: Location ID
+        category:
+          type: string
+          example: Projector
+          description: Amenity category
+        description:
+          type: string
+          example: 4K HD Projector with screen
+          description: Amenity description
+        price:
+          type: number
+          example: 50000
+          description: Price in VND
+        isActive:
+          type: boolean
+          example: true
+          description: Is amenity available
+      required:
+        - amenity_name
+        - location_id
+        - category
+        - price
+        - isActive
+    ReviewDetailDto:
+      type: object
+      properties:
+        client_id:
+          type: string
+          example: client-uuid
+          description: Client user ID
+        stars:
+          type: number
+          example: 5
+          description: Rating stars (1-5)
+        comment:
+          type: string
+          example: Great venue!
+          description: Review comment
+        created_at:
+          type: string
+          example: '2024-12-05T10:30:00Z'
+          description: Created timestamp
+        updated_at:
+          type: string
+          example: '2024-12-05T15:45:00Z'
+          description: Updated timestamp
+        firstName:
+          type: string
+          example: John
+          description: Reviewer first name
+        lastName:
+          type: string
+          example: Doe
+          description: Reviewer last name
+        avatarURL:
+          type: string
+          example: https://example.com/avatar.jpg
+          description: Reviewer avatar URL
+      required:
+        - client_id
+        - stars
+        - created_at
+        - firstName
+        - lastName
+    RatingStatisticsDto:
+      type: object
+      properties:
+        total_ratings:
+          type: number
+          example: 42
+          description: Total number of ratings
+        avg_rating:
+          type: number
+          example: 4.5
+          description: Average rating
+        five_stars:
+          type: number
+          example: 20
+          description: Number of 5-star ratings
+        four_stars:
+          type: number
+          example: 15
+          description: Number of 4-star ratings
+        three_stars:
+          type: number
+          example: 5
+          description: Number of 3-star ratings
+        two_stars:
+          type: number
+          example: 2
+          description: Number of 2-star ratings
+        one_star:
+          type: number
+          example: 0
+          description: Number of 1-star ratings
+      required:
+        - total_ratings
+        - avg_rating
+        - five_stars
+        - four_stars
+        - three_stars
+        - two_stars
+        - one_star
+    LocationDetailsResponseDto:
+      type: object
+      properties:
+        location:
+          description: Location basic information
+          allOf:
+            - $ref: '#/components/schemas/LocationBasicInfoDto'
+        venues:
+          description: List of venues at this location
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueDetailDto'
+        images:
+          description: List of venue images
+          type: array
+          items:
+            $ref: '#/components/schemas/VenueImageDto'
+        amenities:
+          description: List of available amenities
+          type: array
+          items:
+            $ref: '#/components/schemas/AmenityDetailDto'
+        reviews:
+          description: List of reviews
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewDetailDto'
+        statistics:
+          description: Rating statistics
+          allOf:
+            - $ref: '#/components/schemas/RatingStatisticsDto'
+      required:
+        - location
+        - venues
+        - images
+        - amenities
+        - reviews
+        - statistics
+    UpdateLocationDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        addrNo:
+          type: string
+        ward:
+          type: string
+        city:
+          type: string
+        policy:
+          type: string
+        phoneNo:
+          type: string
+        mapURL:
+          type: string
+          format: uri
+        thumbnailURL:
+          type: string
+          format: uri
+        isActive:
+          type: boolean
+    AdminOwnerFeesQueryDto:
+      type: object
+      properties:
+        month:
+          type: number
+          minimum: 1
+          maximum: 12
+          example: 12
+          description: Month to query (1-12)
+        year:
+          type: number
+          minimum: 2000
+          example: 2024
+          description: Year to query
+      required:
+        - month
+        - year
+    AdminOwnerFeesResponseDto:
+      type: object
+      properties:
+        Owner_ID:
+          type: string
+          example: 30303030-3030-3030-3030-303030303001
+          description: Owner user ID
+        Owner_Name:
+          type: string
+          example: John Doe
+          description: Owner account name
+        Bank_Account:
+          type: string
+          example: '1234567890'
+          description: Bank account number
+        Active_Locations:
+          type: number
+          example: 5
+          description: Number of active locations
+        Gross_Revenue:
+          type: number
+          example: 50000000
+          description: Total gross revenue in VND
+        Total_Service_Fee:
+          type: number
+          example: 2500000
+          description: Total platform service fee in VND
+        Net_Income:
+          type: number
+          example: 47500000
+          description: Net income (revenue minus service fee) in VND
+      required:
+        - Owner_ID
+        - Owner_Name
+        - Bank_Account
+        - Active_Locations
+        - Gross_Revenue
+        - Total_Service_Fee
+        - Net_Income
+    CreateAmenityDto:
+      type: object
+      properties:
+        locationId:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          minimum: 0
+        name:
+          type: string
+      required:
+        - locationId
+        - category
+        - price
+        - name
+    UpdateAmenityDto:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+          minimum: 0
+        isActive:
+          type: boolean
+    CreateOrderDto:
+      type: object
+      properties:
+        clientId:
+          type: string
+          example: 30303030-3030-3030-3030-303030303001
+          description: Client user ID
+        locationId:
+          type: string
+          example: 40404040-4040-4040-4040-404040404001
+          description: Location ID where the venue is located
+        venueName:
+          type: string
+          example: Conference Room A
+          description: Name of the venue to book
+        startTime:
+          type: string
+          example: '2024-12-10T09:00:00Z'
+          description: Booking start time (ISO 8601 format)
+        endTime:
+          type: string
+          example: '2024-12-10T17:00:00Z'
+          description: Booking end time (ISO 8601 format)
+        amenityNames:
+          example:
+            - Projector 1
+            - Sound System A
+          description: Optional array of amenity NAMES to add to the order
+          type: array
+          items:
+            type: string
+        discountIds:
+          example:
+            - discount-uuid-1
+          description: Optional array of discount code IDs to apply
+          type: array
+          items:
+            type: string
+      required:
+        - clientId
+        - locationId
+        - venueName
+        - startTime
+        - endTime
+    UpdateOrderDto:
+      type: object
+      properties:
+        totalPrice:
+          type: number
+          minimum: 0
+          example: 500000
+          description: Total price of the order in VND
+        points:
+          type: number
+          minimum: 0
+          example: 100
+          description: Loyalty points earned from this order
+        status:
+          type: string
+          example: CONFIRMED
+          description: Order status (DRAFT, PENDING, CONFIRMED, CANCELLED, COMPLETED)
+          enum:
+            - DRAFT
+            - PENDING
+            - CONFIRMED
+            - CANCELLED
+            - COMPLETED
+    AddOrderAmenityDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+          example: order-uuid-here
+          description: Order ID to add amenity to
+        amenityName:
+          type: string
+          example: Projector 1
+          description: Amenity NAME to add to the order
+      required:
+        - orderId
+        - amenityName
+    RemoveOrderAmenityDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+          example: order-uuid-here
+          description: Order ID to remove amenity from
+        amenityName:
+          type: string
+          example: Projector 1
+          description: Amenity NAME to remove from the order
+      required:
+        - orderId
+        - amenityName
+    ClientOrderResponseDto:
+      type: object
+      properties:
+        order_id:
+          type: string
+          example: order-uuid-here
+          description: Order ID
+        status:
+          type: string
+          example: CONFIRMED
+          description: Order status
+          enum:
+            - DRAFT
+            - PENDING
+            - CONFIRMED
+            - CANCELLED
+            - COMPLETED
+        totalPrice:
+          type: number
+          example: 500000
+          description: Total price in VND
+        points:
+          type: number
+          example: 50
+          description: Loyalty points earned
+        startHour:
+          type: string
+          example: '2024-12-10T09:00:00Z'
+          description: Booking start time
+        endHour:
+          type: string
+          example: '2024-12-10T17:00:00Z'
+          description: Booking end time
+        booking_created_at:
+          type: string
+          example: '2024-12-01T10:30:00Z'
+          description: When the order was created
+        venue_name:
+          type: string
+          example: Conference Room A
+          description: Venue name
+        floor:
+          type: string
+          example: '3'
+          description: Floor number
+        pricePerHour:
+          type: number
+          example: 150000
+          description: Price per hour in VND
+        venue_theme:
+          type: string
+          example: Luxury
+          description: Venue theme/type name
+        minCapacity:
+          type: number
+          example: 10
+          description: Minimum capacity
+        maxCapacity:
+          type: number
+          example: 50
+          description: Maximum capacity
+        location_name:
+          type: string
+          example: Sky Garden Event Space
+          description: Location name
+        addrNo:
+          type: string
+          example: '123'
+          description: Address number
+        ward:
+          type: string
+          example: Ben Nghe
+          description: Ward/District
+        city:
+          type: string
+          example: Ho Chi Minh City
+          description: City
+        thumbnailURL:
+          type: string
+          example: https://example.com/thumbnail.jpg
+          description: Location thumbnail URL
+      required:
+        - order_id
+        - status
+        - totalPrice
+        - points
+        - startHour
+        - endHour
+        - booking_created_at
+        - venue_name
+        - floor
+        - pricePerHour
+        - venue_theme
+        - minCapacity
+        - maxCapacity
+        - location_name
+        - addrNo
+        - ward
+        - city
+        - thumbnailURL
+    InvoiceCreateDataResponseDto:
+      type: object
+      properties:
+        totalPrice:
+          type: number
+          example: 500000
+          description: Total price of the order in VND
+        owner_id:
+          type: string
+          example: owner-uuid-here
+          description: Owner user ID
+        bankId:
+          type: string
+          example: VCB
+          description: Bank ID code
+        bankName:
+          type: string
+          example: Vietcombank
+          description: Bank name
+        accountName:
+          type: string
+          example: John Doe
+          description: Account holder name
+        accountNo:
+          type: string
+          example: '1234567890'
+          description: Bank account number
+      required:
+        - totalPrice
+        - owner_id
+        - bankId
+        - bankName
+        - accountName
+        - accountNo
+    CreateInvoiceDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+      required:
+        - orderId
+    CompleteInvoicePaymentDto:
+      type: object
+      properties:
+        id:
+          type: string
+        senderBank:
+          type: string
+        receiverBank:
+          type: string
+        transactionId:
+          type: string
+        description:
+          type: string
+      required:
+        - id
+        - transactionId
+    UpdateInvoiceStatusDto:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        description:
+          type: string
+      required:
+        - id
+        - status
+    CreateDiscountDto:
+      type: object
+      properties:
+        name:
+          type: string
+        percentage:
+          type: number
+          minimum: 0
+          maximum: 100
+        maxDiscountPrice:
+          type: number
+          minimum: 0
+        minPrice:
+          type: number
+          minimum: 0
+        venueTypeId:
+          type: string
+        membershipTier:
+          type: string
+        startedAt:
+          type: string
+        expiredAt:
+          type: string
+      required:
+        - name
+        - percentage
+        - startedAt
+        - expiredAt
+    UpdateDiscountDto:
+      type: object
+      properties:
+        name:
+          type: string
+        percentage:
+          type: number
+          minimum: 0
+          maximum: 100
+        maxDiscountPrice:
+          type: number
+          minimum: 0
+        minPrice:
+          type: number
+          minimum: 0
+        venueTypeId:
+          type: string
+        membershipTier:
+          type: string
+        startedAt:
+          type: string
+        expiredAt:
+          type: string
+    CreateApplyDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+        discountId:
+          type: string
+      required:
+        - orderId
+        - discountId
+    UpdateApplyDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+        oldDiscountId:
+          type: string
+        newDiscountId:
+          type: string
+      required:
+        - orderId
+        - oldDiscountId
+        - newDiscountId
+    DeleteApplyDto:
+      type: object
+      properties:
+        orderId:
+          type: string
+        discountId:
+          type: string
+      required:
+        - orderId
+        - discountId

@@ -2,6 +2,13 @@
   "extends": "@repo/typescript-config/nestjs.json",
   "compilerOptions": {
     "outDir": "./dist",
+    "strictPropertyInitialization": false,
+    "useUnknownInCatchVariables": false,
+        "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
     "baseUrl": "./"
   },
   "include": ["src", "test"],

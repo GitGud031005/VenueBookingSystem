@@ -5,10 +5,10 @@ import { useVenuesServiceVenueControllerGetClientFavors } from '@/generated/quer
 import { useAuthStore } from '@/stores';
 
 import { formatCurrency } from '../data/mock-data';
-import { VenueWithDetails, Location, Venue } from '../types/venue.types';
 
 import { FavoriteButton } from './favorite-button';
-
+import type { VenueWithDetails, Venue } from '@/types/venue.types';
+import type { Location } from '@/api/location.api';
 interface VenueListProps {
   venues: VenueWithDetails[];
   onVenueClick?: (venueId: string, locationId: string) => void;

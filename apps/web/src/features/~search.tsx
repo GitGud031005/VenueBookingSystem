@@ -15,8 +15,8 @@ import { VenueList } from '@/components/venue-list';
 import { mockProvinces } from '@/data/provinces';
 import { useLocationsServiceLocationControllerSearchLocations } from '@/generated/queries';
 import { useBookingStore } from '@/stores';
-import { SearchFilters } from '@/types/search.types';
-import { VenueWithDetails } from '@/types/venue.types';
+import type { SearchFilters } from '@/types/search.types';
+import type { VenueWithDetails } from '@/types/venue.types';
 
 export const Route = createFileRoute('/search')({
   beforeLoad: ({ context }) => {

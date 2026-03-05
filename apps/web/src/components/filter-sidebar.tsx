@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { venueApi } from '@/api/venue.api';
-import { SearchFilters } from '@/types/search.types';
+import type { SearchFilters } from '@/types/venue.types';
 
 interface FilterSidebarProps {
   filters: SearchFilters;

@@ -7,8 +7,7 @@ import { useAuthStore } from '@/stores';
 import { formatCurrency } from '../data/mock-data';
 
 import { FavoriteButton } from './favorite-button';
-import type { VenueWithDetails, Venue } from '@/types/venue.types';
-import type { Location } from '@/api/location.api';
+import type { VenueWithDetails, Venue, Location } from '@/types/venue.types';
 interface VenueListProps {
   venues: VenueWithDetails[];
   onVenueClick?: (venueId: string, locationId: string) => void;
@@ -30,7 +29,7 @@ export function VenueList({ venues, onVenueClick, location }: VenueListProps) {
         if (!acc[locId]) {
           acc[locId] = { location: venue.location, venues: [] };
         }
-        acc[locId].venues.push(venue);
+        acc[locId]!.venues.push(venue);
         return acc;
       },
       {} as Record<string, LocationGroup>,
@@ -224,15 +223,15 @@ const LocationCard = memo(function LocationCard({
             </div>
             <button
               onClick={() => setIsExpanded((s) => !s)}
-              className="flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 font-bold text-white transition-colors hover:bg-primary-300"
-            >
-              {isExpanded ? 'Hide availability' : 'See Availability'}
-              <svg
-                className={`size-4${isExpanded ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+                className="flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 font-bold text-white transition-colors hover:bg-primary-300 whitespace-nowrap"
               >
+                {isExpanded ? 'Hide availability' : 'See Availability'}
+                <svg
+                  className={`size-4 ${isExpanded ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

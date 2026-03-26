@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { venueApi } from '@/api/venue.api';
-import type { SearchFilters } from '@/types/venue.types';
+import type { SearchFilters } from '@/types/search.types';
 
 interface FilterSidebarProps {
   filters: SearchFilters;
@@ -149,7 +149,7 @@ export function FilterSidebar({
                   className="flex cursor-pointer items-center gap-2"
                 >
                   <input
-                    type="checkbox"
+                    type="radio"
                     checked={filters.theme === theme}
                     onChange={() => handleThemeChange(theme)}
                     className="size-4 rounded border-gray-300 text-primary focus:ring-primary"

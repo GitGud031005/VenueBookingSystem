@@ -1,10 +1,11 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-import { AmenityData, DiscountData, orderApi } from '@/api/order.api';
+import type { AmenityData, DiscountData } from '@/api/order.api';
+import { orderApi } from '@/api/order.api';
 import { formatCurrency } from '@/data/mock-data';
 import { useBookingStore } from '@/stores';
-import { VenueWithDetails } from '@/types/venue.types';
+import type { VenueWithDetails } from '@/types/venue.types';
 
 interface StepOneProps {
   venue: VenueWithDetails | null;
@@ -126,8 +127,10 @@ export function StepOne({
         };
       }
 
-      const start = parseInt(bookingData.startTime.split(':')[0]);
-      const end = parseInt(bookingData.endTime.split(':')[0]);
+      const [startHour = '0'] = bookingData.startTime.split(':');
+      const [endHour = '0'] = bookingData.endTime.split(':');
+      const start = parseInt(startHour);
+      const end = parseInt(endHour);
       const hours = end - start;
       const basePrice = hours * venue.pricePerHour;
 

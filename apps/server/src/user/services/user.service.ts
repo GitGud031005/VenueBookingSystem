@@ -55,7 +55,7 @@ export class UserService {
     if (!validatePassword) {
       throw new BadRequestException('Invalid credentials');
     }
-    return user.id;
+    return convertBinaryHexToUUID(user.id);
   }
 
   public async findUserById(userId: string): Promise<User> {

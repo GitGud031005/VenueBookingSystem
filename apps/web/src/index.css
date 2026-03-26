@@ -12,6 +12,9 @@
   --color-primary: #0b2878;
   --color-primary-light: #9da9c9;
   --color-primary-lighter: #ebf3ff;
+  /* Numeric scale aliases for compatibility */
+  --color-primary-300: #9da9c9;
+  --color-primary-700: #091e60;
 
   /* Accent Colors */
   --color-accent: #febb02;
@@ -85,12 +88,49 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+@utility glass-strong {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@utility card-glass {
+  @apply rounded-xl p-6 transition-all duration-300;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+@utility input-glass {
+  @apply w-full px-4 py-3 rounded-lg outline-none transition-all duration-300;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+
+  &:focus {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+  }
+}
+
+@utility hover-lift {
+  @apply transition-transform duration-200 hover:-translate-y-1;
+}
+
 @utility btn {
   @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300 inline-flex items-center justify-center gap-2;
 }
 
 @utility btn-primary {
-  @apply btn text-white bg-gradient-primary shadow-md hover:-translate-y-0.5 hover:shadow-lg hover:shadow-glow;
+  @apply btn text-white bg-gradient-primary shadow-md hover:-translate-y-0.5;
+  &:hover {
+    box-shadow: var(--shadow-glow);
+  }
 }
 
 @utility btn-accent {
@@ -129,9 +169,31 @@
   animation: fadeIn 0.5s ease-in-out;
 }
 
+@utility animate-slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+@utility animate-slide-down {
+  animation: slideDown 0.4s ease-out;
+}
+
+@utility animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Additional native CSS for the Select arrow as before */

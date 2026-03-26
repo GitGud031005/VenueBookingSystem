@@ -211,7 +211,7 @@ function SearchPage() {
       try {
         // Use first API location to get amenity list
         if (apiVenues.length > 0) {
-          const firstLocation = apiVenues[0];
+          const firstLocation = apiVenues[0]!;
           const data = await orderApi.getOrderMetadata(
             firstLocation.location_id,
             firstLocation.name,
@@ -254,8 +254,8 @@ function SearchPage() {
         : dayjs();
 
       // Combine date from store with time from search page
-      const [startHour, startMinute] = searchParams.startTime.split(':');
-      const [endHour, endMinute] = searchParams.endTime.split(':');
+      const [startHour = '0', startMinute = '0'] = searchParams.startTime.split(':');
+      const [endHour = '0', endMinute = '0'] = searchParams.endTime.split(':');
 
       const checkInDateTime = baseCheckInDate
         .hour(parseInt(startHour))
@@ -434,7 +434,7 @@ function SearchPage() {
       </div>
 
       {/* Breadcrumbs */}
-      <div className="container-custom py-4">
+      {/* <div className="container-custom py-4">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <span className="cursor-pointer hover:underline">Home</span>
           <span>&gt;</span>
@@ -446,10 +446,10 @@ function SearchPage() {
           <span>&gt;</span>
           <span className="text-gray-900">Search results</span>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Content */}
-      <div className="container-custom pb-12">
+      <div className="container-custom py-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* Sidebar */}
           <div className="lg:col-span-1">

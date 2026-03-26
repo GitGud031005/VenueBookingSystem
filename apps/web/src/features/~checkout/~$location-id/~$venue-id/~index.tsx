@@ -14,7 +14,7 @@ import {
   useVenuesServiceVenueControllerPreviewVenue,
 } from '@/generated/queries';
 import { useBookingStore, useAuthStore } from '@/stores';
-import { VenueWithDetails } from '@/types/venue.types';
+import type { VenueWithDetails } from '@/types/venue.types';
 
 export const Route = createFileRoute('/checkout/$location-id/$venue-id/')({
   component: CheckoutPage,
@@ -288,7 +288,7 @@ function CheckoutPage() {
       setBookingData((prev) => ({
         ...prev,
         date: searchParams.checkIn
-          ? new Date(searchParams.checkIn).toISOString().split('T')[0]
+          ? (new Date(searchParams.checkIn).toISOString().split('T')[0] ?? '')
           : prev.date,
         startTime: searchParams.startTime || prev.startTime,
         endTime: searchParams.endTime || prev.endTime,
@@ -305,8 +305,10 @@ function CheckoutPage() {
   useEffect(() => {
     console.log('[CHECKOUT] useEffect[pricing] - Calculating total');
     if (venue && bookingData.startTime && bookingData.endTime) {
-      const start = parseInt(bookingData.startTime.split(':')[0]);
-      const end = parseInt(bookingData.endTime.split(':')[0]);
+      const [startHour = '0'] = bookingData.startTime.split(':');
+      const [endHour = '0'] = bookingData.endTime.split(':');
+      const start = parseInt(startHour);
+      const end = parseInt(endHour);
       const hours = end - start;
       const basePrice = hours * venue.pricePerHour;
       const total = basePrice * 1.05; // Add 5% service fee

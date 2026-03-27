@@ -3,12 +3,12 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../../database/database.service';
 import { CreateUserInterface } from '../user.interface';
-import { LoginDto } from 'src/auth/auth.dto';
+import { LoginDto } from '../../auth/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
-import { convertBinaryHexToUUID, convertUUIDtoBinaryHex } from 'src/utils';
+import { convertBinaryHexToUUID, convertUUIDtoBinaryHex } from '../../utils';
 import { User } from '../entities';
 import { UpdateUserDto } from '../user.dto';
 

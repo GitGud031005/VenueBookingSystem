@@ -13,7 +13,7 @@ import {
   ClientOrderResponseDto,
   InvoiceCreateDataResponseDto,
 } from './dto/order-response.dto';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../database/database.service';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 

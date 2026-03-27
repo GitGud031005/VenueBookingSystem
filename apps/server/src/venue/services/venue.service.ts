@@ -15,7 +15,7 @@ import {
   RateResponseDto,
 } from '../dto/create-venue.dto';
 import { VenuePreviewResponseDto } from '../dto/venue-preview-response.dto';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../../database/database.service';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

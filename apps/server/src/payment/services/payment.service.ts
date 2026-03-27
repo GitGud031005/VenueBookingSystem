@@ -9,7 +9,7 @@ import {
   UpdateApplyDto,
   DeleteApplyDto,
 } from '../dto/payment.dto';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../../database/database.service';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabaseService } from '../../database/database.service';
 import { CreateDiscountDto } from '../dto/create-payment.dto';
 import { v4 as uuidv4 } from 'uuid';
 

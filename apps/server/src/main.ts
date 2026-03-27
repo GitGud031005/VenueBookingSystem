@@ -1,10 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import express from 'express';
 import * as yaml from 'js-yaml';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+const server = express();
+
+export const createNestServer = async (expressInstance: any) => {
+  const app = await NestFactory.create(
+    AppModule,
+    new ExpressAdapter(expressInstance),
+  );
+
   app.enableCors({
     origin: 'http://localhost:5173', // Allow all origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -42,29 +50,20 @@ async function bootstrap() {
   });
 
   // Serve YAML file at /swagger/yaml
-  app.use('/swagger/yaml', (req, res) => {
+  app.use('/swagger/yaml', (req: any, res: any) => {
     res.setHeader('Content-Type', 'text/yaml');
     res.send(yaml.dump(document));
   });
 
   // Serve JSON file at /swagger/json
-  app.use('/swagger/json', (req, res) => {
+  app.use('/swagger/json', (req: any, res: any) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(document, null, 2));
   });
 
-  await app.listen(process.env.PORT ?? 3001);
-  console.log(
-    `\n🚀 Application is running on: http://localhost:${process.env.PORT ?? 3001}`,
-  );
-  console.log(
-    `📚 Swagger UI: http://localhost:${process.env.PORT ?? 3001}/api`,
-  );
-  console.log(
-    `📄 Swagger YAML: http://localhost:${process.env.PORT ?? 3001}/swagger/yaml`,
-  );
-  console.log(
-    `📄 Swagger JSON: http://localhost:${process.env.PORT ?? 3001}/swagger/json\n`,
-  );
-}
-bootstrap();
+  await app.init();
+};
+
+createNestServer(server);
+
+export default server;

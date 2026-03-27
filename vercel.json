@@ -23,6 +23,14 @@
             "destination": "/apps/server/src/main.ts"
         },
         {
+            "source": "/assets/(.*)",
+            "destination": "/apps/web/assets/$1"
+        },
+        {
+            "source": "/(.*\\.(?:png|svg|ico|jpg|jpeg))",
+            "destination": "/apps/web/$1"
+        },
+        {
             "source": "/(.*)",
             "destination": "/apps/web/index.html"
         }

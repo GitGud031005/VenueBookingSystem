@@ -132,7 +132,7 @@ export function StepTwo({
   setTimeout(async () => {
     try {
       await orderApi.completePayment(bookingId, invoiceId);
-      onPaymentSuccess();
+      _onPaymentSuccess();
     } catch (error) {
       console.error('Error calling API:', error);
     }

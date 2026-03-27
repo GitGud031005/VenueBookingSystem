@@ -15,7 +15,7 @@
     ],
     "rewrites": [
         {
-            "source": "/server/(.*)",
+            "source": "/api/(.*)",
             "destination": "/apps/server/src/main.ts"
         },
         {
@@ -24,7 +24,7 @@
         },
         {
             "source": "/(.*)",
-            "destination": "/apps/web/dist/index.html"
+            "destination": "/apps/web/index.html"
         }
     ]
 }

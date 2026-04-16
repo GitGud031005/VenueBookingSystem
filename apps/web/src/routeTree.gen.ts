@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './features/~__root'
 import { Route as SignupRouteImport } from './features/~signup'
 import { Route as SearchRouteImport } from './features/~search'
+import { Route as ProfileRouteImport } from './features/~profile'
 import { Route as MyReviewsRouteImport } from './features/~my-reviews'
 import { Route as MyOrdersRouteImport } from './features/~my-orders'
 import { Route as LoginRouteImport } from './features/~login'
@@ -54,6 +55,11 @@ const SignupRoute = SignupRouteImport.update({
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MyReviewsRoute = MyReviewsRouteImport.update({
@@ -247,6 +253,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/my-orders': typeof MyOrdersRoute
   '/my-reviews': typeof MyReviewsRoute
+  '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
   '/admin/': typeof AdminIndexRoute
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/my-orders': typeof MyOrdersRoute
   '/my-reviews': typeof MyReviewsRoute
+  '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
   '/admin': typeof AdminIndexRoute
@@ -324,6 +332,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/my-orders': typeof MyOrdersRoute
   '/my-reviews': typeof MyReviewsRoute
+  '/profile': typeof ProfileRoute
   '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
   '/admin/': typeof AdminIndexRoute
@@ -364,6 +373,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/my-orders'
     | '/my-reviews'
+    | '/profile'
     | '/search'
     | '/signup'
     | '/admin/'
@@ -402,6 +412,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/my-orders'
     | '/my-reviews'
+    | '/profile'
     | '/search'
     | '/signup'
     | '/admin'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/my-orders'
     | '/my-reviews'
+    | '/profile'
     | '/search'
     | '/signup'
     | '/admin/'
@@ -479,6 +491,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MyOrdersRoute: typeof MyOrdersRoute
   MyReviewsRoute: typeof MyReviewsRoute
+  ProfileRoute: typeof ProfileRoute
   SearchRoute: typeof SearchRoute
   SignupRoute: typeof SignupRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -523,6 +536,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my-reviews': {
@@ -786,6 +806,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MyOrdersRoute: MyOrdersRoute,
   MyReviewsRoute: MyReviewsRoute,
+  ProfileRoute: ProfileRoute,
   SearchRoute: SearchRoute,
   SignupRoute: SignupRoute,
   AdminIndexRoute: AdminIndexRoute,

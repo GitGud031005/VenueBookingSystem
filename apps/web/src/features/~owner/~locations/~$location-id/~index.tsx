@@ -12,7 +12,6 @@ import {
   type LocationDetailResponse,
   type VenueListResponse,
 } from '@/api/location.api';
-import { venueApi } from '@/api/venue.api';
 import { Footer } from '@/components/booking-footer';
 import { Header } from '@/components/booking-header';
 import { formatCurrency } from '@/data/mock-data';
@@ -32,8 +31,6 @@ export function LocationDetailPage() {
   const [amenities, setAmenities] = useState<Amenity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [togglingVenue, setTogglingVenue] = useState<string | null>(null);
-  const [toggleError, setToggleError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'venues' | 'amenities'>('venues');
   const [togglingAmenity, setTogglingAmenity] = useState<string | null>(null);
   const [deletingAmenity, setDeletingAmenity] = useState<string | null>(null);
@@ -64,32 +61,6 @@ export function LocationDetailPage() {
 
     fetchData();
   }, [locationId]);
-
-  const handleToggleVenueStatus = async (
-    venueName: string,
-    currentIsActive: boolean,
-  ) => {
-    try {
-      setTogglingVenue(venueName);
-      setToggleError(null);
-      await venueApi.updateVenueStatus(locationId, venueName, !currentIsActive);
-
-      // Update local state
-      setVenues((prev) =>
-        prev.map((v) =>
-          v.venueName === venueName
-            ? { ...v, venueIsActive: !v.venueIsActive }
-            : v,
-        ),
-      );
-    } catch (err) {
-      handleAxiosError(err, (message) => {
-        setToggleError(message);
-      });
-    } finally {
-      setTogglingVenue(null);
-    }
-  };
 
   const handleToggleAmenityStatus = async (amenity: Amenity) => {
     try {
@@ -281,11 +252,6 @@ export function LocationDetailPage() {
           {/* Venues Section */}
           {activeTab === 'venues' && (
             <div>
-              {toggleError && (
-                <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-4">
-                  <p className="text-sm text-red-800">{toggleError}</p>
-                </div>
-              )}
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900">
